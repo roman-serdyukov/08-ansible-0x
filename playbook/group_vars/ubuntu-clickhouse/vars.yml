@@ -1,0 +1,23 @@
+---
+clickhouse_version: "22.3.3.44"
+clickhouse_packages:
+  - clickhouse-client
+  - clickhouse-server
+  - clickhouse-common-static
+
+clickhouse_install:
+  - clickhouse-common-static
+  - clickhouse-client
+  - clickhouse-server
+  
+vector_version: "0.22.3"
+
+ansible_user: user
+ansible_ssh_private_key: /home/roman/.ssh/id_ed25519.serdyukov@lamis.ru
+ansible_sudo_pass: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          66316366333636323938343136656537346237303232303732396463626363623639393462383866
+          6633643966326432366632326465646437336262663866340a386231633963313337313630303565
+          31353130353165303061346337396130363634316366656537623461353730373761353361373863
+          6462356539623236310a633436623234373131613834656465663233346633623236383035373231
+          3563

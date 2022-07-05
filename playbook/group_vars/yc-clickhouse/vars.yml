@@ -1,0 +1,15 @@
+clickhouse_version: "22.3.3.44"
+clickhouse_packages:
+  - clickhouse-client
+  - clickhouse-server
+  - clickhouse-common-static
+
+clickhouse_install:
+  - clickhouse-common-static
+  - clickhouse-client
+  - clickhouse-server
+  
+vector_version: "0.22.3"
+
+ansible_user: roman
+ansible_ssh_private_key: /home/roman/.ssh/for_netology_rsa

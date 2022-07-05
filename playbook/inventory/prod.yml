@@ -1,0 +1,16 @@
+---
+ubuntu-clickhouse:
+  hosts:
+    u-server-test:
+       ansible_connection: ssh
+    ubuntu-test:
+      ansible_connection: ssh
+yc-clickhouse:
+  hosts:
+    yc-centos:    
+      ansible_host: < my_ip >
+      ansible_connection: ssh
+local-clickhouse:
+  hosts:
+    localhost:
+      ansible_connection: local
