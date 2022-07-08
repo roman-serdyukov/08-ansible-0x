@@ -8,7 +8,10 @@ ubuntu-clickhouse:
 yc-clickhouse:
   hosts:
     yc-centos:    
-      ansible_host: < my_ip >
+      ansible_host: 158.160.5.156
+      ansible_connection: ssh
+    yc-ubuntu:    
+      ansible_host: <yc_ip>
       ansible_connection: ssh
 local-clickhouse:
   hosts:

@@ -1,5 +1,5 @@
 ---
-clickhouse_version: "22.3.3.44"
+# clickhouse_version: "22.3.3.44"
 clickhouse_packages:
   - clickhouse-client
   - clickhouse-server
@@ -10,8 +10,6 @@ clickhouse_install:
   - clickhouse-client
   - clickhouse-server
   
-vector_version: "0.22.3"
-
 ansible_user: user
 ansible_ssh_private_key: /home/roman/.ssh/id_ed25519.serdyukov@lamis.ru
 ansible_sudo_pass: !vault |

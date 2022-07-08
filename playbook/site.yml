@@ -1,105 +1,15 @@
 ---
 - name: Install Clickhouse
   hosts: ubuntu-clickhouse,yc-clickhouse
-
-  handlers:
-    - name: Start clickhouse service
-      become: true
-      ansible.builtin.service:
-        name: clickhouse-server
-        state: restarted
-
-  tasks:
-    - name: Block fot get clickhouse distrib on Debian OS
-      block:
-        - name: Get clickhouse distrib Debian OS
-          ansible.builtin.get_url:
-            url: "https://packages.clickhouse.com/deb/pool/stable/{{ item }}_{{ clickhouse_version }}_all.deb"
-            dest: "./{{ item }}-{{ clickhouse_version }}.deb"
-            mode: '0755'
-          with_items: "{{ clickhouse_packages }}"
-      rescue:
-        - name: Get clickhouse distrib rescue Debian OS
-          ansible.builtin.get_url:
-            url: "https://packages.clickhouse.com/deb/pool/stable/clickhouse-common-static_{{ clickhouse_version }}_amd64.deb"
-            dest: "./clickhouse-common-static-{{ clickhouse_version }}.deb"
-            mode: '0755'
-      when: ansible_os_family == "Debian"
-
-    - name: Install clickhouse packages on Debian OS
-      become: true
-      ansible.builtin.apt:
-        deb: /home/{{ ansible_user }}/{{ item }}-{{ clickhouse_version }}.deb
-      with_items: "{{ clickhouse_install }}"
-      notify: Start clickhouse service
-      when: ansible_os_family == "Debian"
-
-    - name: Block fot get clickhouse distrib on RedHat OS
-      block:
-        - name: Get clickhouse distrib on RedHat OS
-          ansible.builtin.get_url:
-            url: "https://packages.clickhouse.com/rpm/stable/{{ item }}-{{ clickhouse_version }}.noarch.rpm"
-            dest: "./{{ item }}-{{ clickhouse_version }}.rpm"
-            mode: '0755'
-          with_items: "{{ clickhouse_packages }}"
-      rescue:
-        - name: Get clickhouse distrib on RedHat OS
-          ansible.builtin.get_url:
-            url: "https://packages.clickhouse.com/rpm/stable/clickhouse-common-static-{{ clickhouse_version }}.x86_64.rpm"
-            dest: "./clickhouse-common-static-{{ clickhouse_version }}.rpm"
-            mode: '0755'
-      when: ansible_os_family != "Debian"
-    
-    - name: Install clickhouse packages on RedHat OS
-      become: true
-      ansible.builtin.yum:
-        name:
-          - clickhouse-common-static-{{ clickhouse_version }}.rpm
-          - clickhouse-client-{{ clickhouse_version }}.rpm
-          - clickhouse-server-{{ clickhouse_version }}.rpm
-      notify: Start clickhouse service
-      when: ansible_os_family != "Debian"
-
-    - name: Flush handlers
-      ansible.builtin.meta: flush_handlers
-
-    - name: Pause for 3 seconds to start clickhouse
-      ansible.builtin.pause:
-        seconds: 3
-
-    - name: Create database
-      ansible.builtin.command: "clickhouse-client -q 'create database logs;'"
-      register: create_db
-      failed_when: create_db.rc != 0 and create_db.rc !=82
-      changed_when: create_db.rc == 0
+  roles:
+    - clickhouse
 
 - name: Install vector
   hosts: ubuntu-clickhouse,yc-clickhouse
+  roles:
+    - vector
 
-  tasks:
-    - name: Get Vector distrib on Debian OS
-      ansible.builtin.get_url:
-        url: https://packages.timber.io/vector/{{ vector_version }}/vector_{{ vector_version }}-1_amd64.deb
-        dest: "./vector_{{ vector_version }}-1_amd64.deb"
-        mode: '0755'
-      when: ansible_os_family == "Debian"
-
-    - name: Install Vector on Debian OS
-      become: true
-      ansible.builtin.apt:
-        deb: /home/{{ ansible_user }}/vector_{{ vector_version }}-1_amd64.deb
-      when: ansible_os_family == "Debian"
-
-    - name: Get Vector distrib on RedHat OS
-      ansible.builtin.get_url:
-        url: https://packages.timber.io/vector/{{ vector_version }}/vector-{{ vector_version }}-1.x86_64.rpm
-        dest: "./vector_{{ vector_version }}-1.x86_64.rpm"
-        mode: '0755'
-      when: ansible_os_family != "Debian"
-
-    - name: Install Vector on RedHat OS
-      become: true
-      ansible.builtin.yum:
-        name:
-          - vector_{{ vector_version }}-1.x86_64.rpm
-      when: ansible_os_family != "Debian"
+- name: Install lighthouse
+  hosts: ubuntu-clickhouse,yc-clickhouse
+  roles:
+    - lighthouse

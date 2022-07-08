@@ -1,4 +1,5 @@
-# clickhouse_version: "22.3.3.44"
+---
+# vars file for vector-role
 clickhouse_packages:
   - clickhouse-client
   - clickhouse-server
@@ -8,6 +9,3 @@ clickhouse_install:
   - clickhouse-common-static
   - clickhouse-client
   - clickhouse-server
-  
-ansible_user: roman
-ansible_ssh_private_key: /home/roman/.ssh/for_netology_rsa
